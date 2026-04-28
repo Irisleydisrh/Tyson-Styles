@@ -1,0 +1,28 @@
+# Cloudflare Pages Headers - CSP PERMISIVO para desarrollo
+# ESTE ARCHIVO FUNCIONA PARA CLOUDFLARE PAGES
+
+/*
+  Content-Security-Policy: 
+    default-src * data: blob:;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:* blob: https:;
+    worker-src 'self' blob:;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: blob: https:;
+    font-src 'self' data:;
+    connect-src 'self' http://localhost:* https: ws: wss:;
+    frame-src 'self' https://www.instagram.com;
+    upgrade-insecure-requests;
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+/api/*
+  Content-Security-Policy: 
+    default-src *;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval';
+    connect-src *
+
+/_u/*
+  Content-Security-Policy:
+    script-src 'self' 'unsafe-inline' 'unsafe-eval'

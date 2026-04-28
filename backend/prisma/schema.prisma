@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AppRole {
+  ADMIN
+  USER
+}
+
+enum DeliveryMethod {
+  DOMICILIO
+  RECOGER
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  SENT
+  DELIVERED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  phone     String?
+  role      AppRole  @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  refreshTokens RefreshToken[]
+  orders    Order[]
+  reviews   Review[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String   @unique
+  icon      String?
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+  @@index([slug])
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  priceUSD    Decimal  @db.Decimal(10, 2) @default(0)
+  categoryId  String?
+  imageUrl    String?
+  stock       Int       @default(0)
+  isActive    Boolean  @default(true)
+  featured    Boolean  @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  category    Category? @relation(fields: [categoryId], references: [id])
+  reviews     Review[]
+  @@index([slug])
+  @@index([categoryId])
+  @@index([featured])
+}
+
+model Order {
+  id               String         @id @default(uuid())
+  codigo           String?        @unique
+  customerName     String
+  phone            String
+  items            Json
+  total            Decimal        @db.Decimal(10, 2)
+  deliveryMethod  DeliveryMethod
+  address          String?
+  notes            String?
+  status           OrderStatus    @default(PENDING)
+  motivoCancelacion String?
+  userId           String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  user             User?          @relation(fields: [userId], references: [id])
+  orderHistorial   PedidoHistorial[]
+  @@index([userId])
+  @@index([status])
+  @@index([codigo])
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  productId  String
+  authorName String
+  rating     Int
+  comment    String?
+  approved   Boolean  @default(false)
+  userId     String?
+  createdAt  DateTime @default(now())
+  product    Product  @relation(fields: [productId], references: [id])
+  user       User?    @relation(fields: [userId], references: [id])
+  @@index([productId])
+  @@index([productId, approved])
+}
+
+model PedidoHistorial {
+  id        String   @id @default(uuid())
+  orderId   String
+  estado    String
+  createdAt DateTime @default(now())
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  @@index([orderId])
+}
+
+model ExchangeRate {
+  id        String   @id @default(uuid())
+  rate      Decimal  @db.Decimal(10, 2)
+  updatedAt DateTime @updatedAt
+}
