@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/client",
-  "installCommand": "npm install",
-  "framework": "tanstack-start"
+  "buildCommand": "echo 'Static build - using index.html directly'",
+  "outputDirectory": ".",
+  "installCommand": "echo 'No dependencies needed'",
+  "framework": "static"
 }
