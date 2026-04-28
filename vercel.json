@@ -1,6 +1,6 @@
 {
-  "buildCommand": "echo 'Static build - using index.html directly'",
-  "outputDirectory": ".",
-  "installCommand": "echo 'No dependencies needed'",
-  "framework": "static"
+  "buildCommand": "npm run build:dev",
+  "outputDirectory": "dist/client",
+  "installCommand": "npm install",
+  "framework": "vite"
 }
