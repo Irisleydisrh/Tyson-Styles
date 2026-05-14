@@ -28,9 +28,13 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Link Railway project
+      - name: Deploy to Railway
         run: |
-          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment production
+          railway up \
+            --project ${{ secrets.RAILWAY_PROJECT_ID }} \
+            --environment ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
 
       - name: Set Environment Variables
         run: |
@@ -39,10 +43,5 @@ jobs:
           railway variables set JWT_EXPIRES_IN="7d"
           railway variables set PORT="3001"
           railway variables set NODE_ENV="production"
-        env:
-          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
-
-      - name: Deploy
-        run: railway up --detach
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
