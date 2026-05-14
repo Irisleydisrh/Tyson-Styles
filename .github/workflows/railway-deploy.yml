@@ -11,6 +11,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,9 +28,21 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Railway Deploy
-        run: railway up --environment production
+      - name: Link Railway project
+        run: |
+          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment production
+
+      - name: Set Environment Variables
+        run: |
+          railway variables set DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          railway variables set JWT_SECRET="${{ secrets.JWT_SECRET }}"
+          railway variables set JWT_EXPIRES_IN="7d"
+          railway variables set PORT="3001"
+          railway variables set NODE_ENV="production"
         env:
           RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_ENVIRONMENT_ID: ${{ secrets.RAILWAY_ENVIRONMENT_ID }}
+
+      - name: Deploy
+        run: railway up --detach
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
