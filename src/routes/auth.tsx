@@ -33,7 +33,7 @@ function AuthPage() {
       return;
     }
     toast.success("¡Bienvenida!");
-    navigate({ to: "/admin" });
+    navigate({ to: "/admin-panel" });
   };
 
   return (

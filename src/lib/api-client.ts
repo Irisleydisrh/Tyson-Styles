@@ -1,6 +1,8 @@
+import { API_BASE_URL, ADMIN_API_KEY } from "@/lib/config";
+
 // API Base URL - configurable via environment
-const API_BASE = import.meta?.vite?.PUBLIC_API_URL || 'http://localhost:3001';
-const API_KEY = 'tyson_admin'; // Must match backend ADMIN_API_KEY
+const API_BASE = API_BASE_URL;
+const API_KEY = ADMIN_API_KEY;
 
 // eslint-disable-next-line no-unused-vars
 function _checkEnvironment() {

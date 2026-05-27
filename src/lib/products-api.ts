@@ -1,4 +1,5 @@
 import { api } from "@/lib/api-client";
+import { API_BASE_URL } from "@/lib/config";
 import type { ApiCategory, ApiProduct } from "@/types/api";
 
 export type { ApiCategory as Category, ApiProduct as Product };
@@ -83,7 +84,7 @@ export async function uploadProductImage(file: File): Promise<string> {
   const token = typeof window !== 'undefined' && typeof sessionStorage !== 'undefined' 
     ? sessionStorage.getItem('adminToken') || '' 
     : '';
-  const response = await fetch('http://localhost:3001/api/upload/image', {
+  const response = await fetch(`${API_BASE_URL}/api/upload/image`, {
     method: 'POST',
     headers: token ? {
       Authorization: `Bearer ${token}`,
